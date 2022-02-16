@@ -6,6 +6,17 @@ import { baseURL } from "../../util/auth";
 import cookie from "js-cookie";
 let cancel;
 
+const flatArray = (arr) => {
+  arr.forEach((val, i) => {
+    if (Array.isArray(val)) {
+      let newVal = [...val];
+      arr[i] = newVal;
+      return flatArray(arr);
+    }
+  });
+  return arr;
+};
+
 const SearchComponent = () => {
   const [text, setText] = useState("");
   const [results, setResults] = useState([]);
@@ -20,6 +31,7 @@ const SearchComponent = () => {
 
     try {
       cancel && cancel();
+
       const token = cookie.get("token");
       const res = await axios.get(`${baseURL}/api/v1/search/${value}`, {
         headers: {

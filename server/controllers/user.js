@@ -96,7 +96,7 @@ const createUser = async (req, res) => {
 
 const postLoginUser = async (req, res) => {
   const { email, password } = req.body.user;
-
+  console.log(email);
   if (!isEmail(email)) return res.status(401).send("Invalid Email");
   if (password.length < 6)
     return res.status(401).send("Password must be at least 6 chars long");
