@@ -1,6 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { baseURL } from "./util/auth";
+import axios from "axios";
+import { parseCookies } from "nookies";
 
-const index = ({ user }) => {
+const index = ({ user, postData, errorLoading }) => {
+  const [posts, setPosts] = useState(postData);
+  const [showToastr, setShowStoastr] = useState(false);
   //*UseEffects ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
   useEffect(() => {
@@ -8,6 +13,21 @@ const index = ({ user }) => {
   }, []);
 
   return <div>Home Page</div>;
+};
+
+index.getInitialProps = async (ctx) => {
+  try {
+    const token = parseCookies(ctx);
+    const res = await axios.get(`${baseURL}/api/v1/posts`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return { postData: res.data };
+  } catch (err) {
+    console.log(err);
+    return { errorLoading: true };
+  }
 };
 
 export default index;
