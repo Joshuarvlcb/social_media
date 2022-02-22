@@ -11,12 +11,7 @@ const SideMenu = ({
 
   return (
     <>
-      <List
-        style={{ marginTop: "2rem" }}
-        size="big"
-        verticalAlign="middle"
-        selection
-      >
+      <List size="big" verticalAlign="middle" selection>
         <Link href="/">
           <List.Item active={isActive("/")}>
             <Icon

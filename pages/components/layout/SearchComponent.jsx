@@ -56,7 +56,6 @@ const SearchComponent = () => {
   return (
     <Search
       onSearchChange={handleChange}
-      style={{ marginTop: "2rem" }}
       loading={loading}
       results={results || null}
       value={text}

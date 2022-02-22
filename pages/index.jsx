@@ -2,6 +2,14 @@ import { useEffect, useState } from "react";
 import { baseURL } from "./util/auth";
 import axios from "axios";
 import { parseCookies } from "nookies";
+import { NoPosts } from "./components/layout/NoData";
+import CreatePost from "./components/post/CreatePost";
+import { Segment } from "semantic-ui-react";
+import CardPost from "./components/post/CardPost";
+/*
+  local storage is similar to cookies 
+  stores information of the user in the browser 
+*/
 
 const index = ({ user, postData, errorLoading }) => {
   const [posts, setPosts] = useState(postData);
@@ -12,12 +20,36 @@ const index = ({ user, postData, errorLoading }) => {
     document.title = `Welcome, ${user.name.split(" ")[0]}`;
   }, []);
 
-  return <div>Home Page</div>;
+  useEffect(() => {
+    showToastr && setTimeout(() => setShowStoastr(false), 3000);
+  }, [showToastr]);
+
+  if (!posts || errorLoading) return <NoPosts />;
+
+  return (
+    <>
+      {/* SHOW TOASTER STUFF */}
+      <Segment>
+        <CreatePost user={user} setPosts={setPosts} />
+        {posts.map((post) => {
+          return (
+            <CardPost
+              key={post._id}
+              post={post}
+              user={user}
+              setPosts={setPosts}
+              setShowStoastr={setShowStoastr}
+            />
+          );
+        })}
+      </Segment>
+    </>
+  );
 };
 
 index.getInitialProps = async (ctx) => {
   try {
-    const token = parseCookies(ctx);
+    const { token } = parseCookies(ctx);
     const res = await axios.get(`${baseURL}/api/v1/posts`, {
       headers: {
         Authorization: `Bearer ${token}`,
