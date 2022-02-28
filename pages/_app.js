@@ -4,6 +4,7 @@ import "semantic-ui-css/semantic.min.css";
 import { baseURL, redirectUser } from "./util/auth";
 import { destroyCookie, parseCookies } from "nookies";
 import axios from "axios";
+import ProfilePage from "./[username]";
 
 function MyApp({ Component, pageProps }) {
   // function MyApp(AppContext) {
@@ -15,12 +16,13 @@ function MyApp({ Component, pageProps }) {
     </Layout>
   );
 }
+// !!Protected routes
 
 MyApp.getInitialProps = async ({ ctx, Component }) => {
   const { token } = parseCookies(ctx);
   let pageProps = {};
 
-  const protectedRoutes = ["/"];
+  const protectedRoutes = ["/", "/[username]"];
 
   const isProtectedRoute = protectedRoutes.includes(ctx.pathname);
 
@@ -49,5 +51,6 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
   }
   return { pageProps };
 };
+
 
 export default MyApp;

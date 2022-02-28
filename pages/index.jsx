@@ -38,7 +38,7 @@ const index = ({ user, postData, errorLoading }) => {
               post={post}
               user={user}
               setPosts={setPosts}
-              setShowStoastr={setShowStoastr}
+              setShowToastr={setShowStoastr}
             />
           );
         })}

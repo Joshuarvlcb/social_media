@@ -109,10 +109,16 @@ const deletePost = async (req, res) => {
       if (user.role === "admin") {
         await post.remove();
         return res.status(200).send("post deleted successfully");
+      } else {
+        return res.status(401).send("Unauthorized");
       }
     }
+
+    await post.remove();
+    return res.status(200).send("post deleted");
   } catch (err) {
     console.log(err);
+    console.log("2");
     return res.status(500).send("server error in deletePOst");
   }
 };

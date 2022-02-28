@@ -25,7 +25,6 @@ const Layout = ({ children, user }) => {
             style={{
               marginLeft: "1rem",
               marginRight: "1rem",
-              marginTop: "2rem",
             }}
           >
             <Ref innerRef={contextRef}>

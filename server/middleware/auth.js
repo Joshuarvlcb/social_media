@@ -12,6 +12,8 @@ const authMiddleware = (req, res, next) => {
     const auth = req.headers.authorization.split(" ")[1];
     const { userId } = jwt.verify(auth, process.env.JWT_SECRET);
     req.userId = userId;
+    //comments
+    //like list
 
     next();
   } catch (error) {
