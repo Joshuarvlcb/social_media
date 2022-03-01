@@ -6,18 +6,65 @@ import { parseCookies } from "nookies";
 import { Grid } from "semantic-ui-react";
 import Cookies from "js-cookie";
 import CardPost from "./components/post/CardPost";
-
+import ProfileMenuTabs from "./components/profile/ProfileMenuTabs";
+//!FOLLOW STATS??
 const ProfilePage = ({
   errorLoading,
   profile,
   followersLength,
   followingLength,
   user,
-  userFollowStats,
+  followStats,
 }) => {
   const router = useRouter();
   const { username } = router.query;
-  return <div>{username}</div>;
+  const ownAccount = profile.user._id === user._id;
+
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [activeItem, setActiveItem] = useState("profile");
+  const [loggedUserFollowStats, setLoggedUserFollowStats] =
+    useState(followStats);
+
+  const handleItemClick = (clickedTab) => setActiveItem(clickedTab);
+
+  useEffect(() => {
+    const getPosts = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(
+          `${baseURL}/api/v1/profile/posts/${username}`,
+          {
+            headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+          }
+        );
+        setPosts(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+      setLoading(false);
+    };
+    getPosts();
+  }, [router.query.username]);
+
+  return (
+    <>
+      <Grid stackable>
+        <Grid.Row>
+          <Grid.Column>
+            <ProfileMenuTabs
+              activeItem={activeItem}
+              handleItemClick={handleItemClick}
+              followersLength={followersLength}
+              followingLength={followingLength}
+              ownAccount={ownAccount}
+              loggedUserFollowStats={loggedUserFollowStats}
+            />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </>
+  );
 };
 
 ProfilePage.getInitialProps = async (ctx) => {

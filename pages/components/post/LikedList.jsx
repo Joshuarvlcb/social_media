@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import Router from "next/router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { List, Popup, Image } from "semantic-ui-react";
 import { baseURL } from "../../util/auth";
 import catchErrors from "../../util/catchErrors";
@@ -14,10 +14,9 @@ const LikedList = ({ postId, trigger }) => {
   const getLikesList = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${baseURL}/api/v1/posts/likes/${postId}`, {
+      const res = await axios.get(`${baseURL}/api/v1/posts/like/${postId}`, {
         headers: { Authorization: `Bearer ${Cookies.get("token")}` },
       });
-      console.log(res.data);
       setLikesList(res.data);
     } catch (error) {
       console.log(catchErrors(error));
@@ -25,6 +24,9 @@ const LikedList = ({ postId, trigger }) => {
     }
     setLoading(false);
   };
+  useEffect(() => {
+    console.log(likesList);
+  }, [likesList]);
 
   return (
     <Popup

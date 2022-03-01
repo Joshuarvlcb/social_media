@@ -66,7 +66,7 @@ const SearchComponent = () => {
         setText("");
       }}
       resultRenderer={ResultRenderer}
-      onResultSelect={(_, { result }) => {
+      onResultSelect={(_, data) => {
         return Router.push(`/${data.result.username}`);
       }}
     />
