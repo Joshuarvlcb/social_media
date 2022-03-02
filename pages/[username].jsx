@@ -70,6 +70,7 @@ const ProfilePage = ({
 ProfilePage.getInitialProps = async (ctx) => {
   try {
     const { username } = ctx.query;
+    console.log(username);
     const { token } = parseCookies(ctx);
     const res = await axios.get(`${baseURL}/api/v1/profile/${username}`, {
       headers: {
