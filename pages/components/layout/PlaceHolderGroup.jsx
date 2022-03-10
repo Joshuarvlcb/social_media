@@ -9,7 +9,27 @@ import {
 } from "semantic-ui-react";
 import { range } from "lodash";
 
-export const PlaceholderPosts = () => {};
+export const PlaceholderPosts = () => {
+  return range(1, 3).map((each) => {
+    return (
+      <div key={each}>
+        <Placeholder fluid>
+          <Placeholder.Header>
+            <Placeholder.Line />
+            <Placeholder.Line />
+          </Placeholder.Header>
+          <Placeholder.Paragraph>
+            <Placeholder.Line />
+            <Placeholder.Line />
+            <Placeholder.Line />
+            <Placeholder.Line />
+          </Placeholder.Paragraph>
+        </Placeholder>
+        <Divider hidden />
+      </div>
+    );
+  });
+};
 
 export const PlaceholderSuggestions = () => {};
 

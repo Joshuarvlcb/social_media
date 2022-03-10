@@ -17,6 +17,7 @@ export const setToken = (token) => {
 
 export const redirectUser = (ctx, location) => {
   if (ctx.req) {
+    
     ctx.res.writeHead(302, { Location: location });
     ctx.res.end();
   } else {

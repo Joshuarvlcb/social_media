@@ -7,6 +7,10 @@ import { Grid } from "semantic-ui-react";
 import Cookies from "js-cookie";
 import CardPost from "./components/post/CardPost";
 import ProfileMenuTabs from "./components/profile/ProfileMenuTabs";
+import ProfileHeader from "./components/profile/ProfileHeader";
+import { PlaceholderPosts } from "./components/layout/PlaceHolderGroup";
+import { NoProfilePost } from "./components/layout/NoData";
+import Followers from "./components/profile/Followers";
 //!FOLLOW STATS??
 const ProfilePage = ({
   errorLoading,
@@ -46,7 +50,7 @@ const ProfilePage = ({
     };
     getPosts();
   }, [router.query.username]);
-
+  if (!profile) return null;
   return (
     <>
       <Grid stackable>
@@ -60,6 +64,42 @@ const ProfilePage = ({
               ownAccount={ownAccount}
               loggedUserFollowStats={loggedUserFollowStats}
             />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column>
+            {activeItem === "profile" && (
+              <>
+                <ProfileHeader
+                  profile={profile}
+                  ownAccount={ownAccount}
+                  setLoggedUserFollowStats={setLoggedUserFollowStats}
+                  loggedUserFollowStats={loggedUserFollowStats}
+                />
+                {loading ? (
+                  <PlaceholderPosts />
+                ) : posts ? (
+                  posts.map((post) => (
+                    <CardPost
+                      key={post._id}
+                      post={post}
+                      user={user}
+                      setPosts={setPosts}
+                    />
+                  ))
+                ) : (
+                  <NoProfilePost />
+                )}
+              </>
+            )}
+            {activeItem === "followers" && (
+              <Followers
+                user={user}
+                loggedUserFollowStats={loggedUserFollowStats}
+                setLoggedUserFollowStats={setLoggedUserFollowStats}
+                profileUserId={profile.user._id}
+              />
+            )}
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -78,6 +118,7 @@ ProfilePage.getInitialProps = async (ctx) => {
       },
     });
     const { profile, followersLength, followingLength } = res.data;
+    console.log(profile);
     return { profile, followersLength, followingLength };
   } catch (err) {
     return { errorLoading: true };

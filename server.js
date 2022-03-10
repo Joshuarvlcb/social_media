@@ -34,15 +34,26 @@ const authRoute = require("./server/routes/authRoutes");
 const searchRoute = require("./server/routes/search");
 const uploadRoute = require("./server/routes/uploadPicRoute");
 const postsRoute = require("./server/routes/postsRoute");
-const profileRoute = require('./server/routes/profile');
+const profileRoute = require("./server/routes/profile");
+const messagesRoute = require("./server/routes/messages");
+const { default: Server } = require("next/dist/server/base-server");
 
 app.use("/api/v1/search", searchRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/uploads", uploadRoute);
 app.use("/api/v1/posts", authMiddleware, postsRoute);
-app.use('/api/v1/profile',authMiddleware,profileRoute)
+app.use("/api/v1/profile", authMiddleware, profileRoute);
+app.use("/api/v1/messages", authMiddleware, messagesRoute);
 
+//*SOCKETS*//
+// const Server = require("http").Server(app);
+// const io = require("socket.io")(Server);
+// io.on("connect", (socket) => {
+//   socket.on("ping server", (data) => {
+//     console.log(data);
+//   });
+// });
 connectDB();
 
 nextApp.prepare().then(() => {

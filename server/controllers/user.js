@@ -3,7 +3,7 @@ const FollowerModel = require("../models/FollowerModel");
 const ProfileModel = require("../models/ProfileModel");
 const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/gim;
 const defaultProfilePicURL = require("../util/defaultProfilePic");
-
+const ChatModel = require("../models/ChatModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const isEmail = require("validator/lib/isEmail");
@@ -65,11 +65,13 @@ const createUser = async (req, res) => {
 
     let profileFields = {};
     profileFields.user = user._id;
-    if (bio) profileFields.bio = bio;
-    if (twitter) profileFields.twitter = twitter;
-    if (youtube) profileFields.youtube = youtube;
-    if (instagram) profileFields.instagram = instagram;
-    if (facebook) profileFields.facebook = facebook;
+    profileFields.social = {};
+
+    if (bio) profileFields.social.bio = bio;
+    if (twitter) profileFields.social.twitter = twitter;
+    if (youtube) profileFields.social.youtube = youtube;
+    if (instagram) profileFields.social.instagram = instagram;
+    if (facebook) profileFields.social.facebook = facebook;
 
     await new ProfileModel(profileFields).save();
     await new FollowerModel({
@@ -110,6 +112,25 @@ const postLoginUser = async (req, res) => {
     const isPassword = await bcrypt.compare(password, user.password);
 
     if (!isPassword) return res.status(401).send("Invalid Credentials");
+
+    const chatModel = await ChatModel.findOne({ user: user._id });
+    if (!chatModel)
+      await new ChatModel({
+        user: user._id,
+        // chats: [
+        //   {
+        //     messagesWith: user._id,
+        //     messages: [
+        //       {
+        //         sender: user._id,
+        //         receiver: user._id,
+        //         msg: "first message",
+        //         date: new Date(),
+        //       },
+        //     ],
+        //   },
+        // ],
+      }).save();
 
     const payload = { userId: user._id };
     jwt.sign(
